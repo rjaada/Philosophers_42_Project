@@ -1,43 +1,26 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: rjaada <rjaada@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/07/02 13:50:41 by rjaada            #+#    #+#              #
-#    Updated: 2024/07/02 16:30:30 by rjaada           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME = philo
 
-NAME = Philosophers
-IDIR = ../include
+SRCS = main.c init.c utils.c philosophers.c monitoring.c
+
+OBJS = $(SRCS:.c=.o)
+
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I$(IDIR)
-
-ODIR = obj
-LDIR = ../lib
-
-LIBS = -lm
-
-DEPS = $(IDIR)/Philosophers.h
-OBJ = main.o utils.o
-OBJ := $(patsubst %,$(ODIR)/%,$(OBJ))
+CFLAGS = -Wall -Wextra -Werror -pthread
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-		$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
-$(ODIR)/%.o : %.c $(DEPS)
-		$(CC) -c -o $@ $< $(CFLAGS)
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-    rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
+	rm -f $(OBJS)
 
 fclean: clean
-    rm -f $(NAME)
+	rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: clean fclean re $(NAME)
+.PHONY: all clean fclean re
